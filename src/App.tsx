@@ -5,9 +5,10 @@ import Navbar from "./components/Navbar/Navbar";
 import { Charts } from "./components/Chart/Charts";
 import type { ChartData } from "chart.js";
 import Sidebar from "./components/Sidebar/Sidebar";
+import { ChartLegendsEnum, ChartTypeEnum } from "./types/chartType";
 
 const App = () => {
-  const [chartType, setChartType] = useState<"bar" | "line" | "pie">("bar");
+  const [chartType, setChartType] = useState<ChartTypeEnum>(ChartTypeEnum.Bar);
 
   const chartData: ChartData = {
     labels: ["January", "February", "March", "April", "May"],
@@ -30,7 +31,7 @@ const App = () => {
         <Charts
           className="chart"
           data={chartData}
-          chartLegend="top"
+          chartLegend={ChartLegendsEnum.Top}
           chartTitle="sample"
           chartType={chartType}
         />

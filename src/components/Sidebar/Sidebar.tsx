@@ -2,11 +2,12 @@ import { Menu, type MenuProps } from "antd";
 import Sider from "antd/es/layout/Sider";
 import { PieChartOutlined } from "@ant-design/icons";
 import { useState } from "react";
+import { ChartTypeEnum } from "../../types/chartType";
 
 type MenuItem = Required<MenuProps>["items"][number];
 
 interface SidebarProps {
-  setChartType: (value: "bar" | "line" | "pie") => void;
+  setChartType: (value: ChartTypeEnum) => void;
 }
 
 function Sidebar({ setChartType }: SidebarProps) {
@@ -28,9 +29,9 @@ function Sidebar({ setChartType }: SidebarProps) {
   }
   const items: MenuItem[] = [
     getItem("Graph View", "sub1", undefined, <PieChartOutlined />, [
-      getItem("Bar Chart", "4", () => setChartType("bar")),
-      getItem("Pie Chart", "3", () => setChartType("pie")),
-      getItem("Line Chart", "5", () => setChartType("line")),
+      getItem("Bar Chart", "4", () => setChartType(ChartTypeEnum.Bar)),
+      getItem("Pie Chart", "3", () => setChartType(ChartTypeEnum.Pie)),
+      getItem("Line Chart", "5", () => setChartType(ChartTypeEnum.Line)),
     ]),
   ];
   return (

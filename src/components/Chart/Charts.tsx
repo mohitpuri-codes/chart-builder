@@ -14,6 +14,7 @@ import {
   ArcElement,
 } from "chart.js";
 import { useEffect, useRef } from "react";
+import type { ChartLegendsEnum, ChartTypeEnum } from "../../types/chartType";
 
 ChartJS.register(
   BarController,
@@ -33,8 +34,8 @@ export interface ChartsProps {
   chartTitle: string;
   className?: string;
   data?: ChartData;
-  chartType: "bar" | "line" | "pie";
-  chartLegend: "left" | "top" | "right" | "bottom" | "center" | "chartArea";
+  chartType: ChartTypeEnum;
+  chartLegend: ChartLegendsEnum;
 }
 
 export function Charts({
