@@ -11,6 +11,11 @@
   padding: 10px 20px;
 }
 
+.navbar > div {
+  display: flex;
+  align-items: center;
+}
+
 .navbar img {
   margin-right: 10px;
   width: 50px;
