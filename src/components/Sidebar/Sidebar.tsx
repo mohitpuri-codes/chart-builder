@@ -1,24 +1,21 @@
-import { Menu } from "antd";
+import { Radio, Typography, type RadioChangeEvent } from "antd";
 import Sider from "antd/es/layout/Sider";
-import { PieChartOutlined } from "@ant-design/icons";
 import { useState } from "react";
 import { ChartTypeEnum } from "../../types/chartType";
-import { type MenuItem, getItem } from "../../utils/antd functions/getMenuItem";
 
 interface SidebarProps {
   setChartType: (value: ChartTypeEnum) => void;
+  chartType: string;
 }
 
-function Sidebar({ setChartType }: SidebarProps) {
+function Sidebar({ setChartType, chartType }: SidebarProps) {
   const [collapsed, setCollapsed] = useState(false);
 
-  const items: MenuItem[] = [
-    getItem("Graph View", "sub1", undefined, <PieChartOutlined />, [
-      getItem("Bar Chart", "4", () => setChartType(ChartTypeEnum.Bar)),
-      getItem("Pie Chart", "3", () => setChartType(ChartTypeEnum.Pie)),
-      getItem("Line Chart", "5", () => setChartType(ChartTypeEnum.Line)),
-    ]),
-  ];
+  const handleChange = (e: RadioChangeEvent) => {
+    const chartType = e.target.value;
+    setChartType(chartType);
+  };
+
   return (
     <Sider
       width="280px"
@@ -27,27 +24,28 @@ function Sidebar({ setChartType }: SidebarProps) {
       onCollapse={(value) => setCollapsed(value)}
     >
       <div className="demo-logo-vertical" />
-      <Menu
-        theme="dark"
-        defaultSelectedKeys={["1"]}
-        mode="inline"
-        items={items}
-        style={{ margin: 0 }}
-      />
+      {!collapsed && (
+        <div className="radio-group">
+          <Radio.Group
+            onChange={(e: RadioChangeEvent) => handleChange(e)}
+            value={chartType}
+            className="radio-wrapper"
+          >
+            <Typography className="select-header">Show Data in:</Typography>
+            <Radio defaultChecked value={ChartTypeEnum.Bar} className="radio">
+              Bar Chart
+            </Radio>
+            <Radio className="radio" value={ChartTypeEnum.Pie}>
+              Pie Chart
+            </Radio>
+            <Radio className="radio" value={ChartTypeEnum.Line}>
+              Line Chart
+            </Radio>
+          </Radio.Group>
+        </div>
+      )}
     </Sider>
   );
 }
 
 export default Sidebar;
-
-// aside {
-//   width: 250px !important;
-//   min-width: 250px !important;
-//   max-width: 250px !important;
-// }
-
-// aside div {
-//   width: 250px !important;
-//   min-width: 250px !important;
-//   max-width: 250px !important;
-// }

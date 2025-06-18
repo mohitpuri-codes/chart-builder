@@ -39,3 +39,31 @@
   height: 40%;
   max-width: 80%;
 }
+
+.radio-group {
+  padding: 16px;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  justify-content: center;
+  align-items: center;
+}
+
+.radio {
+  color: white;
+  font-size: 18px;
+}
+
+.radio-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  justify-content: center;
+  align-items: center;
+}
+
+.select-header {
+  color: white;
+  font-size: 24px;
+}

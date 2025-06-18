@@ -25,7 +25,7 @@ const App = () => {
 
   return (
     <Layout className="main-layout">
-      <Sidebar setChartType={setChartType} />
+      <Sidebar setChartType={setChartType} chartType={chartType} />
       <Layout>
         <Navbar />
         {chartData ? (
