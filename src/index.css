@@ -29,3 +29,8 @@
 .main-layout {
   min-height: 100vh;
 }
+
+.chart-wrapper {
+  height: 40%;
+  max-width: 80%;
+}

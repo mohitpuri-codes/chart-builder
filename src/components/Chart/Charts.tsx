@@ -22,7 +22,6 @@ ChartJS.register(
   PointElement,
   PieController,
   ArcElement,
-
   BarElement,
   CategoryScale,
   LinearScale,
@@ -70,5 +69,9 @@ export function Charts({
     }
   }, [chartTitle, chartType, data, chartLegend]);
 
-  return <canvas className="chart" ref={canvasRef}></canvas>;
+  return (
+    <div className="chart-wrapper">
+      <canvas className="chart" ref={canvasRef}></canvas>
+    </div>
+  );
 }

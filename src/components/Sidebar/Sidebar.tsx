@@ -1,6 +1,6 @@
 import { Menu, type MenuProps } from "antd";
 import Sider from "antd/es/layout/Sider";
-import ChartLogo from "../ChartLogo/ChartLogo";
+import { PieChartOutlined } from "@ant-design/icons";
 import { useState } from "react";
 
 type MenuItem = Required<MenuProps>["items"][number];
@@ -27,7 +27,7 @@ function Sidebar({ setChartType }: SidebarProps) {
     } as MenuItem;
   }
   const items: MenuItem[] = [
-    getItem("Graph View", "sub1", undefined, <ChartLogo />, [
+    getItem("Graph View", "sub1", undefined, <PieChartOutlined />, [
       getItem("Bar Chart", "4", () => setChartType("bar")),
       getItem("Pie Chart", "3", () => setChartType("pie")),
       getItem("Line Chart", "5", () => setChartType("line")),
