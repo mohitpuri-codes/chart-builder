@@ -23,7 +23,7 @@ const App = () => {
   };
 
   return (
-    <Layout style={{ minHeight: "100vh" }}>
+    <Layout className="main-layout">
       <Sidebar setChartType={setChartType} />
       <Layout>
         <Navbar />
