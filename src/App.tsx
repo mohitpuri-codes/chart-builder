@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Layout } from "antd";
+import { Empty, Layout } from "antd";
 import "./index.css";
 import Navbar from "./components/Navbar/Navbar";
 import { Charts } from "./components/Chart/Charts";
@@ -28,13 +28,17 @@ const App = () => {
       <Sidebar setChartType={setChartType} />
       <Layout>
         <Navbar />
-        <Charts
-          className="chart"
-          data={chartData}
-          chartLegend={ChartLegendsEnum.Top}
-          chartTitle="sample"
-          chartType={chartType}
-        />
+        {chartData ? (
+          <Charts
+            className="chart"
+            data={chartData}
+            chartLegend={ChartLegendsEnum.Top}
+            chartTitle="sample"
+            chartType={chartType}
+          />
+        ) : (
+          <Empty />
+        )}
       </Layout>
     </Layout>
   );

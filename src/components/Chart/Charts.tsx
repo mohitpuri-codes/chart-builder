@@ -52,6 +52,7 @@ export function Charts({
         data: data || { datasets: [], labels: [] },
         options: {
           responsive: true,
+          maintainAspectRatio: false,
           plugins: {
             legend: {
               position: chartLegend,

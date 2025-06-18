@@ -1,10 +1,9 @@
-import { Menu, type MenuProps } from "antd";
+import { Menu } from "antd";
 import Sider from "antd/es/layout/Sider";
 import { PieChartOutlined } from "@ant-design/icons";
 import { useState } from "react";
 import { ChartTypeEnum } from "../../types/chartType";
-
-type MenuItem = Required<MenuProps>["items"][number];
+import { type MenuItem, getItem } from "../../utils/antd functions/getMenuItem";
 
 interface SidebarProps {
   setChartType: (value: ChartTypeEnum) => void;
@@ -12,21 +11,7 @@ interface SidebarProps {
 
 function Sidebar({ setChartType }: SidebarProps) {
   const [collapsed, setCollapsed] = useState(false);
-  function getItem(
-    label: React.ReactNode,
-    key: React.Key,
-    onChange?: () => void,
-    icon?: React.ReactNode,
-    children?: MenuItem[]
-  ): MenuItem {
-    return {
-      key,
-      icon,
-      children,
-      label,
-      onClick: onChange,
-    } as MenuItem;
-  }
+
   const items: MenuItem[] = [
     getItem("Graph View", "sub1", undefined, <PieChartOutlined />, [
       getItem("Bar Chart", "4", () => setChartType(ChartTypeEnum.Bar)),
@@ -36,6 +21,7 @@ function Sidebar({ setChartType }: SidebarProps) {
   ];
   return (
     <Sider
+      width="280px"
       collapsible
       collapsed={collapsed}
       onCollapse={(value) => setCollapsed(value)}
@@ -53,3 +39,15 @@ function Sidebar({ setChartType }: SidebarProps) {
 }
 
 export default Sidebar;
+
+// aside {
+//   width: 250px !important;
+//   min-width: 250px !important;
+//   max-width: 250px !important;
+// }
+
+// aside div {
+//   width: 250px !important;
+//   min-width: 250px !important;
+//   max-width: 250px !important;
+// }
