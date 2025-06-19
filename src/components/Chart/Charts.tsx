@@ -6,15 +6,15 @@ import {
   LinearScale,
   Title,
   Legend,
-  type ChartData,
   LineController,
   LineElement,
   PointElement,
   PieController,
   ArcElement,
 } from "chart.js";
-import { useEffect, useRef } from "react";
-import type { ChartLegendsEnum, ChartTypeEnum } from "../../types/chartType";
+import { useEffect, useMemo, useRef } from "react";
+import type { ChartLegendsEnum } from "../../types/chartType";
+import { useAppSelector } from "../../store/hooks/hooks";
 
 ChartJS.register(
   BarController,
@@ -33,17 +33,31 @@ ChartJS.register(
 export interface ChartsProps {
   chartTitle: string;
   className?: string;
-  data?: ChartData;
-  chartType: ChartTypeEnum;
+
   chartLegend: ChartLegendsEnum;
 }
 
-export function Charts({
-  chartTitle,
-  data,
-  chartType,
-  chartLegend,
-}: ChartsProps) {
+export function Charts({ chartTitle, chartLegend }: ChartsProps) {
+  const chartType = useAppSelector((state) => state.dataEntryReducer.chartType);
+  const Xcoords = useAppSelector((state) => state.coordinateSlice.XCoordinate);
+  const Ycoords = useAppSelector((state) => state.coordinateSlice.YCoordinate);
+
+  const data = useMemo(
+    () => ({
+      labels: Xcoords,
+      datasets: [
+        {
+          label: "Dataset 1",
+          data: Ycoords,
+          backgroundColor: "rgba(75, 192, 192, 0.2)",
+          borderColor: "rgba(75, 192, 192, 1)",
+          borderWidth: 1,
+        },
+      ],
+    }),
+    [Xcoords, Ycoords]
+  );
+
   const canvasRef = useRef<HTMLCanvasElement>(null);
   useEffect(() => {
     if (canvasRef.current) {
