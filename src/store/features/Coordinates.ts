@@ -2,9 +2,14 @@ import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import type { RootState } from "../app";
 
 // Define a type for the slice state
+interface CoordinateData {
+  id: string;
+  value: string;
+}
+
 interface Coordinates {
-  XCoordinate: string[];
-  YCoordinate: number[];
+  XCoordinate: CoordinateData[];
+  YCoordinate: CoordinateData[];
 }
 
 // Define the initial state using that type
@@ -17,18 +22,21 @@ export const coordinateSlice = createSlice({
   name: "coordinates",
   initialState,
   reducers: {
-    addXCoordinates: (state, action: PayloadAction<string>) => {
+    // method to add X coordinates
+    addXCoordinates: (state, action: PayloadAction<CoordinateData>) => {
       state.XCoordinate.push(action.payload);
     },
-    addYCoordinates: (state, action: PayloadAction<number>) => {
+    // method to add Y coordinates
+    addYCoordinates: (state, action: PayloadAction<CoordinateData>) => {
       state.YCoordinate.push(action.payload);
     },
-    deleteCoordinates: (state, action: PayloadAction<number>) => {
+    // method to delete the given data item
+    deleteCoordinates: (state, action: PayloadAction<string>) => {
       state.XCoordinate = state.XCoordinate.filter(
-        (_, index) => index === action.payload
+        (data) => data.id !== action.payload
       );
       state.YCoordinate = state.YCoordinate.filter(
-        (_, index) => index === action.payload
+        (data) => data.id !== action.payload
       );
     },
   },

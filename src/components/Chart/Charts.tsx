@@ -44,11 +44,11 @@ export function Charts({ chartTitle, chartLegend }: ChartsProps) {
 
   const data = useMemo(
     () => ({
-      labels: Xcoords,
+      labels: Xcoords.map((XcoordsItem) => XcoordsItem.value),
       datasets: [
         {
           label: "Dataset 1",
-          data: Ycoords,
+          data: Ycoords.map((YcoordsItem) => YcoordsItem.value),
           backgroundColor: "rgba(75, 192, 192, 0.2)",
           borderColor: "rgba(75, 192, 192, 1)",
           borderWidth: 1,

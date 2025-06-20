@@ -14,9 +14,10 @@ import {
   DATA_SAVED,
   DATA_SAVED_SUCCESS_MESSAGE,
 } from "../../constants/SuccessConstants";
+import { uid } from "uid";
 
 interface DataType {
-  key: number;
+  key: string;
   XAxis: string;
   YAxis: string;
 }
@@ -33,7 +34,7 @@ const DataTable = () => {
   const dispatch = useAppDispatch();
 
   const [dataSource, setDataSource] = useState<DataType[]>([]);
-  const [count, setCount] = useState(0);
+
   const [isAdding, setIsAdding] = useState(false); // State to toggle input visibility
   const [newXAxis, setNewXAxis] = useState(""); // State for X-axis input
   const [newYAxis, setNewYAxis] = useState(""); // State for Y-axis input
@@ -69,6 +70,7 @@ const DataTable = () => {
     setIsAdding(true); // Show input fields for adding new data
   };
 
+  // save the inputs on click of save button
   const handleSave = () => {
     if (!newXAxis.trim() || !newYAxis.trim()) {
       api.error({
@@ -79,15 +81,16 @@ const DataTable = () => {
       return;
     }
 
+    // Add new Data to redux and clear input fields later
     const newData: DataType = {
-      key: count,
+      key: uid(),
       XAxis: newXAxis,
       YAxis: newYAxis,
     };
-    dispatch(addYCoordinates(Number(newYAxis)));
-    dispatch(addXCoordinates(newXAxis));
+    dispatch(addYCoordinates({ id: newData.key, value: newData.XAxis }));
+    dispatch(addXCoordinates({ id: newData.key, value: newData.YAxis }));
     setDataSource([...dataSource, newData]);
-    setCount(count + 1);
+
     setIsAdding(false); // Hide input fields after saving
     setNewXAxis(""); // Clear input fields
     setNewYAxis("");
@@ -98,14 +101,16 @@ const DataTable = () => {
     });
   };
 
+  // cancel operation
   const handleCancel = () => {
     setIsAdding(false); // Hide input fields
     setNewXAxis(""); // Clear input fields
     setNewYAxis("");
   };
 
+  // delete operation for coordinates
   const handleDelete = useCallback(
-    (key: number) => {
+    (key: string) => {
       dispatch(deleteCoordinates(key));
       setDataSource(dataSource.filter((item) => item.key !== key));
     },
