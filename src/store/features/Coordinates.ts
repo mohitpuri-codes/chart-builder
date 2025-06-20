@@ -12,6 +12,12 @@ interface Coordinates {
   YCoordinate: CoordinateData[];
 }
 
+interface XYCoordinatesAction {
+  id: string;
+  XCoordinateValue: string;
+  YCoordinateValue: string;
+}
+
 // Define the initial state using that type
 const initialState: Coordinates = {
   XCoordinate: [],
@@ -22,13 +28,16 @@ export const coordinateSlice = createSlice({
   name: "coordinates",
   initialState,
   reducers: {
-    // method to add X coordinates
-    addXCoordinates: (state, action: PayloadAction<CoordinateData>) => {
-      state.XCoordinate.push(action.payload);
-    },
-    // method to add Y coordinates
-    addYCoordinates: (state, action: PayloadAction<CoordinateData>) => {
-      state.YCoordinate.push(action.payload);
+    // method to add the XY coordinates
+    addXYCoordinates: (state, action: PayloadAction<XYCoordinatesAction>) => {
+      state.XCoordinate.push({
+        id: action.payload.id,
+        value: action.payload.XCoordinateValue,
+      });
+      state.YCoordinate.push({
+        id: action.payload.id,
+        value: action.payload.YCoordinateValue,
+      });
     },
     // method to delete the given data item
     deleteCoordinates: (state, action: PayloadAction<string>) => {
@@ -42,8 +51,7 @@ export const coordinateSlice = createSlice({
   },
 });
 
-export const { addXCoordinates, addYCoordinates, deleteCoordinates } =
-  coordinateSlice.actions;
+export const { addXYCoordinates, deleteCoordinates } = coordinateSlice.actions;
 
 // Other code such as selectors can use the imported `RootState` type
 export const selectCount = (state: RootState) => state.dataEntryReducer;

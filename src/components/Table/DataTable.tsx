@@ -2,8 +2,7 @@ import { createContext, useCallback, useState, type JSX } from "react";
 import { Table, Popconfirm, Input, Button, notification } from "antd";
 import { useAppDispatch } from "../../store/hooks/hooks";
 import {
-  addXCoordinates,
-  addYCoordinates,
+  addXYCoordinates,
   deleteCoordinates,
 } from "../../store/features/Coordinates";
 import {
@@ -98,11 +97,18 @@ const DataTable = () => {
     }
 
     inputRows.forEach((row) => {
-      dispatch(addYCoordinates({ id: row.key, value: row.XAxis }));
-      dispatch(addXCoordinates({ id: row.key, value: row.YAxis }));
+      dispatch(
+        addXYCoordinates({
+          id: row.key,
+          XCoordinateValue: row.XAxis,
+          YCoordinateValue: row.YAxis,
+        })
+      );
     });
 
-    setDataSource([...dataSource, ...inputRows]);
+    setDataSource((prevDataSource) => {
+      return [...prevDataSource, ...inputRows];
+    });
     setInputRows([]);
     api.success({
       message: DATA_SAVED,
