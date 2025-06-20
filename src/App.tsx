@@ -1,46 +1,26 @@
-import { useState } from "react";
 import { Empty, Layout } from "antd";
 import "./index.css";
 import Navbar from "./components/Navbar/Navbar";
 import { Charts } from "./components/Chart/Charts";
-import type { ChartData } from "chart.js";
 import Sidebar from "./components/Sidebar/Sidebar";
-import { ChartLegendsEnum, ChartTypeEnum } from "./types/chartType";
+
+import { useAppSelector } from "./store/hooks/hooks";
+import { useMemo } from "react";
+import { Context } from "./components/Table/DataTable";
 
 const App = () => {
-  const [chartType, setChartType] = useState<ChartTypeEnum>(ChartTypeEnum.Bar);
-
-  const chartData: ChartData = {
-    labels: ["January", "February", "March", "April", "May"],
-    datasets: [
-      {
-        label: "Dataset 1",
-        data: [10, 20, 30, 40, 50],
-        backgroundColor: "rgba(75, 192, 192, 0.2)",
-        borderColor: "rgba(75, 192, 192, 1)",
-        borderWidth: 1,
-      },
-    ],
-  };
-
+  const contextValue = useMemo(() => ({ name: "Ant Design" }), []);
+  const data = useAppSelector((state) => state.coordinateSlice.XCoordinate);
   return (
-    <Layout className="main-layout">
-      <Sidebar setChartType={setChartType} chartType={chartType} />
-      <Layout>
-        <Navbar />
-        {chartData ? (
-          <Charts
-            className="chart"
-            data={chartData}
-            chartLegend={ChartLegendsEnum.Top}
-            chartTitle="sample"
-            chartType={chartType}
-          />
-        ) : (
-          <Empty />
-        )}
+    <Context.Provider value={contextValue}>
+      <Layout className="main-layout">
+        <Sidebar />
+        <Layout>
+          <Navbar />
+          {data.length ? <Charts /> : <Empty />}
+        </Layout>
       </Layout>
-    </Layout>
+    </Context.Provider>
   );
 };
 

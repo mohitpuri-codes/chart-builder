@@ -6,15 +6,15 @@ import {
   LinearScale,
   Title,
   Legend,
-  type ChartData,
   LineController,
   LineElement,
   PointElement,
   PieController,
   ArcElement,
 } from "chart.js";
-import { useEffect, useRef } from "react";
-import type { ChartLegendsEnum, ChartTypeEnum } from "../../types/chartType";
+import { useEffect, useMemo, useRef } from "react";
+
+import { useAppSelector } from "../../store/hooks/hooks";
 
 ChartJS.register(
   BarController,
@@ -30,20 +30,31 @@ ChartJS.register(
   Legend
 );
 
-export interface ChartsProps {
-  chartTitle: string;
-  className?: string;
-  data?: ChartData;
-  chartType: ChartTypeEnum;
-  chartLegend: ChartLegendsEnum;
-}
+export function Charts() {
+  const chartType = useAppSelector((state) => state.dataEntryReducer.chartType);
+  const Xcoords = useAppSelector((state) => state.coordinateSlice.XCoordinate);
+  const Ycoords = useAppSelector((state) => state.coordinateSlice.YCoordinate);
+  const legendPosition = useAppSelector(
+    (state) => state.chartConfig.legendPosition
+  );
+  const title = useAppSelector((state) => state.chartConfig.chartTitle);
 
-export function Charts({
-  chartTitle,
-  data,
-  chartType,
-  chartLegend,
-}: ChartsProps) {
+  const data = useMemo(
+    () => ({
+      labels: Xcoords.map((XcoordsItem) => XcoordsItem.value),
+      datasets: [
+        {
+          label: "Dataset 1",
+          data: Ycoords.map((YcoordsItem) => YcoordsItem.value),
+          backgroundColor: "rgba(75, 192, 192, 0.2)",
+          borderColor: "rgba(75, 192, 192, 1)",
+          borderWidth: 1,
+        },
+      ],
+    }),
+    [Xcoords, Ycoords]
+  );
+
   const canvasRef = useRef<HTMLCanvasElement>(null);
   useEffect(() => {
     if (canvasRef.current) {
@@ -55,11 +66,11 @@ export function Charts({
           maintainAspectRatio: false,
           plugins: {
             legend: {
-              position: chartLegend,
+              position: legendPosition,
             },
             title: {
               display: true,
-              text: chartTitle,
+              text: title,
             },
           },
         },
@@ -69,7 +80,7 @@ export function Charts({
         myChart.destroy();
       };
     }
-  }, [chartTitle, chartType, data, chartLegend]);
+  }, [chartType, data, legendPosition, title]);
 
   return (
     <div className="chart-wrapper">
