@@ -1,4 +1,4 @@
-import { createContext, useMemo, useState, type JSX } from "react";
+import { createContext, useCallback, useMemo, useState, type JSX } from "react";
 import { Table, Popconfirm, Input, Button, notification } from "antd";
 import { useAppDispatch } from "../../store/hooks/hooks";
 import {
@@ -104,10 +104,13 @@ const DataTable = () => {
     setNewYAxis("");
   };
 
-  const handleDelete = (key: number) => {
-    dispatch(deleteCoordinates(key));
-    setDataSource(dataSource.filter((item) => item.key !== key));
-  };
+  const handleDelete = useCallback(
+    (key: number) => {
+      dispatch(deleteCoordinates(key));
+      setDataSource(dataSource.filter((item) => item.key !== key));
+    },
+    [dataSource, dispatch]
+  );
 
   return (
     <Context.Provider value={contextValue}>
