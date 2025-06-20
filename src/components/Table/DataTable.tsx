@@ -96,20 +96,16 @@ const DataTable = () => {
       return;
     }
 
-    inputRows.forEach((row) => {
-      dispatch(
-        addXYCoordinates({
-          id: row.key,
-          XCoordinateValue: row.XAxis,
-          YCoordinateValue: row.YAxis,
-        })
-      );
-    });
+    const payload = inputRows.map((row) => ({
+      id: row.key,
+      XCoordinateValue: row.XAxis,
+      YCoordinateValue: row.YAxis,
+    }));
 
-    setDataSource((prevDataSource) => {
-      return [...prevDataSource, ...inputRows];
-    });
+    dispatch(addXYCoordinates(payload));
+    setDataSource((prevDataSource) => [...prevDataSource, ...inputRows]);
     setInputRows([]);
+
     api.success({
       message: DATA_SAVED,
       description: DATA_SAVED_SUCCESS_MESSAGE,
