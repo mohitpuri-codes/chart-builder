@@ -5,25 +5,30 @@ import { Charts } from "./components/Chart/Charts";
 import Sidebar from "./components/Sidebar/Sidebar";
 import { ChartLegendsEnum } from "./types/chartType";
 import { useAppSelector } from "./store/hooks/hooks";
+import { useMemo } from "react";
+import { Context } from "./components/Table/DataTable";
 
 const App = () => {
+  const contextValue = useMemo(() => ({ name: "Ant Design" }), []);
   const data = useAppSelector((state) => state.coordinateSlice.XCoordinate);
   return (
-    <Layout className="main-layout">
-      <Sidebar />
-      <Layout>
-        <Navbar />
-        {data.length ? (
-          <Charts
-            className="chart"
-            chartLegend={ChartLegendsEnum.Top}
-            chartTitle="sample"
-          />
-        ) : (
-          <Empty />
-        )}
+    <Context.Provider value={contextValue}>
+      <Layout className="main-layout">
+        <Sidebar />
+        <Layout>
+          <Navbar />
+          {data.length ? (
+            <Charts
+              className="chart"
+              chartLegend={ChartLegendsEnum.Top}
+              chartTitle="sample"
+            />
+          ) : (
+            <Empty />
+          )}
+        </Layout>
       </Layout>
-    </Layout>
+    </Context.Provider>
   );
 };
 

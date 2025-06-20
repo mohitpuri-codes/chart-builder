@@ -1,4 +1,4 @@
-import { createContext, useCallback, useMemo, useState, type JSX } from "react";
+import { createContext, useCallback, useState, type JSX } from "react";
 import { Table, Popconfirm, Input, Button, notification } from "antd";
 import { useAppDispatch } from "../../store/hooks/hooks";
 import {
@@ -28,19 +28,14 @@ interface ColumnType {
   render?: (_: any, record: DataType) => JSX.Element | null;
 }
 
-const Context = createContext({ name: "Default" });
+export const Context = createContext({ name: "Default" });
 
 const DataTable = () => {
   const dispatch = useAppDispatch();
 
   const [dataSource, setDataSource] = useState<DataType[]>([]);
-
-  const [isAdding, setIsAdding] = useState(false); // State to toggle input visibility
-  const [newXAxis, setNewXAxis] = useState(""); // State for X-axis input
-  const [newYAxis, setNewYAxis] = useState(""); // State for Y-axis input
+  const [inputRows, setInputRows] = useState<DataType[]>([]);
   const [api, contextHolder] = notification.useNotification();
-
-  const contextValue = useMemo(() => ({ name: "Ant Design" }), []);
 
   const columns: ColumnType[] = [
     {
@@ -66,13 +61,34 @@ const DataTable = () => {
     },
   ];
 
+  // Add empty input row
   const handleAdd = () => {
-    setIsAdding(true); // Show input fields for adding new data
+    const newRow: DataType = {
+      key: uid(),
+      XAxis: "",
+      YAxis: "",
+    };
+    setInputRows([...inputRows, newRow]);
   };
 
-  // save the inputs on click of save button
-  const handleSave = () => {
-    if (!newXAxis.trim() || !newYAxis.trim()) {
+  // Add data to redux from the input
+  const handleInputChange = (
+    key: string,
+    field: keyof DataType,
+    value: string
+  ) => {
+    setInputRows((prev) =>
+      prev.map((row) => (row.key === key ? { ...row, [field]: value } : row))
+    );
+  };
+
+  const handleSaveAll = () => {
+    // returns false if the function returns false for all of the array elements.
+    const hasEmpty = inputRows.some(
+      (row) => !row.XAxis.trim() || !row.YAxis.trim()
+    );
+
+    if (hasEmpty) {
       api.error({
         message: VALIDATION_ERROR,
         description: FIELDS_REQUIRED,
@@ -81,19 +97,13 @@ const DataTable = () => {
       return;
     }
 
-    // Add new Data to redux and clear input fields later
-    const newData: DataType = {
-      key: uid(),
-      XAxis: newXAxis,
-      YAxis: newYAxis,
-    };
-    dispatch(addYCoordinates({ id: newData.key, value: newData.XAxis }));
-    dispatch(addXCoordinates({ id: newData.key, value: newData.YAxis }));
-    setDataSource([...dataSource, newData]);
+    inputRows.forEach((row) => {
+      dispatch(addYCoordinates({ id: row.key, value: row.XAxis }));
+      dispatch(addXCoordinates({ id: row.key, value: row.YAxis }));
+    });
 
-    setIsAdding(false); // Hide input fields after saving
-    setNewXAxis(""); // Clear input fields
-    setNewYAxis("");
+    setDataSource([...dataSource, ...inputRows]);
+    setInputRows([]);
     api.success({
       message: DATA_SAVED,
       description: DATA_SAVED_SUCCESS_MESSAGE,
@@ -101,14 +111,12 @@ const DataTable = () => {
     });
   };
 
-  // cancel operation
+  // remove all the input rows
   const handleCancel = () => {
-    setIsAdding(false); // Hide input fields
-    setNewXAxis(""); // Clear input fields
-    setNewYAxis("");
+    setInputRows([]);
   };
 
-  // delete operation for coordinates
+  // delete specific row
   const handleDelete = useCallback(
     (key: string) => {
       dispatch(deleteCoordinates(key));
@@ -118,35 +126,42 @@ const DataTable = () => {
   );
 
   return (
-    <Context.Provider value={contextValue}>
+    <>
       {contextHolder}
-
       <div>
         <Button onClick={handleAdd} type="primary" className="btn-margin">
           Add
         </Button>
-        {isAdding && (
+        {inputRows.length > 0 && (
           <div>
-            <Input
-              placeholder="Enter X-Axis value"
-              value={newXAxis}
-              onChange={(e) => setNewXAxis(e.target.value)}
-              className="small-margin input-width"
-            />
-            <Input
-              placeholder="Enter Y-Axis value"
-              type="number"
-              value={newYAxis}
-              onChange={(e) => setNewYAxis(e.target.value)}
-              className="small-margin input-width"
-            />
+            {inputRows.map((row) => (
+              <div key={row.key} className="input-row">
+                <Input
+                  placeholder="Enter X-Axis value"
+                  value={row.XAxis}
+                  onChange={(e) =>
+                    handleInputChange(row.key, "XAxis", e.target.value)
+                  }
+                  className="small-margin input-width"
+                />
+                <Input
+                  placeholder="Enter Y-Axis value"
+                  type="number"
+                  value={row.YAxis}
+                  onChange={(e) =>
+                    handleInputChange(row.key, "YAxis", e.target.value)
+                  }
+                  className="small-margin input-width"
+                />
+              </div>
+            ))}
             <div className="action-button-wrapper">
               <Button
-                onClick={handleSave}
+                onClick={handleSaveAll}
                 type="primary"
                 className="small-margin"
               >
-                Save
+                Save All
               </Button>
               <Button onClick={handleCancel} type="default">
                 Cancel
@@ -161,7 +176,7 @@ const DataTable = () => {
           pagination={false}
         />
       </div>
-    </Context.Provider>
+    </>
   );
 };
 
