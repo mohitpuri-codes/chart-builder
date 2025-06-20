@@ -3,7 +3,7 @@ import "./index.css";
 import Navbar from "./components/Navbar/Navbar";
 import { Charts } from "./components/Chart/Charts";
 import Sidebar from "./components/Sidebar/Sidebar";
-import { ChartLegendsEnum } from "./types/chartType";
+
 import { useAppSelector } from "./store/hooks/hooks";
 import { useMemo } from "react";
 import { Context } from "./components/Table/DataTable";
@@ -17,11 +17,7 @@ const App = () => {
         <Sidebar />
         <Layout>
           <Navbar />
-          {data.length ? (
-            <Charts chartLegend={ChartLegendsEnum.Top} chartTitle="sample" />
-          ) : (
-            <Empty />
-          )}
+          {data.length ? <Charts /> : <Empty />}
         </Layout>
       </Layout>
     </Context.Provider>

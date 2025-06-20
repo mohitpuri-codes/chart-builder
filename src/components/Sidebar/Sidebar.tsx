@@ -5,6 +5,7 @@ import { ChartTypeEnum } from "../../types/chartType";
 import DataTable from "../Table/DataTable";
 import { useAppSelector, useAppDispatch } from "../../store/hooks/hooks";
 import { selectChartType } from "../../store/features/ChartSelection";
+import ChartConfiguration from "../ChartConfigs/ChartConfiguration";
 
 function Sidebar() {
   const chartType = useAppSelector((state) => state.dataEntryReducer.chartType);
@@ -55,6 +56,9 @@ function Sidebar() {
             >
               <DataTable />
             </Modal>
+          </div>
+          <div>
+            <ChartConfiguration />
           </div>
         </div>
       )}

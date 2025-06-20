@@ -1,9 +1,10 @@
 import { configureStore } from "@reduxjs/toolkit";
 import dataEntryReducer from "./features/ChartSelection";
 import coordinateSlice from "./features/Coordinates";
+import chartConfig from "./features/ChartConfig";
 
 export const store = configureStore({
-  reducer: { dataEntryReducer, coordinateSlice },
+  reducer: { dataEntryReducer, coordinateSlice, chartConfig },
 });
 
 // Infer the `RootState` and `AppDispatch` types from the store itself

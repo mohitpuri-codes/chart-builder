@@ -13,7 +13,7 @@ import {
   ArcElement,
 } from "chart.js";
 import { useEffect, useMemo, useRef } from "react";
-import type { ChartLegendsEnum } from "../../types/chartType";
+
 import { useAppSelector } from "../../store/hooks/hooks";
 
 ChartJS.register(
@@ -30,17 +30,14 @@ ChartJS.register(
   Legend
 );
 
-export interface ChartsProps {
-  chartTitle: string;
-  className?: string;
-
-  chartLegend: ChartLegendsEnum;
-}
-
-export function Charts({ chartTitle, chartLegend }: ChartsProps) {
+export function Charts() {
   const chartType = useAppSelector((state) => state.dataEntryReducer.chartType);
   const Xcoords = useAppSelector((state) => state.coordinateSlice.XCoordinate);
   const Ycoords = useAppSelector((state) => state.coordinateSlice.YCoordinate);
+  const legendPosition = useAppSelector(
+    (state) => state.chartConfig.legendPosition
+  );
+  const title = useAppSelector((state) => state.chartConfig.chartTitle);
 
   const data = useMemo(
     () => ({
@@ -69,11 +66,11 @@ export function Charts({ chartTitle, chartLegend }: ChartsProps) {
           maintainAspectRatio: false,
           plugins: {
             legend: {
-              position: chartLegend,
+              position: legendPosition,
             },
             title: {
               display: true,
-              text: chartTitle,
+              text: title,
             },
           },
         },
@@ -83,7 +80,7 @@ export function Charts({ chartTitle, chartLegend }: ChartsProps) {
         myChart.destroy();
       };
     }
-  }, [chartTitle, chartType, data, chartLegend]);
+  }, [chartType, data, legendPosition, title]);
 
   return (
     <div className="chart-wrapper">
