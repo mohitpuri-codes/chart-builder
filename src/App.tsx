@@ -18,11 +18,7 @@ const App = () => {
         <Layout>
           <Navbar />
           {data.length ? (
-            <Charts
-              className="chart"
-              chartLegend={ChartLegendsEnum.Top}
-              chartTitle="sample"
-            />
+            <Charts chartLegend={ChartLegendsEnum.Top} chartTitle="sample" />
           ) : (
             <Empty />
           )}
